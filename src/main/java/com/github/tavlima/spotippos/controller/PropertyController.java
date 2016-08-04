@@ -8,11 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -30,7 +29,8 @@ public class PropertyController {
     }
 
     @RequestMapping(value = "/properties", method = RequestMethod.POST)
-    public Callable<Long> createProperty(@RequestBody Property property) {
+    public Callable<Long> createProperty(
+            @RequestBody Property property) {
         return () -> -1L;
     }
 
@@ -48,7 +48,8 @@ public class PropertyController {
     }
 
     @RequestMapping(value = "/properties/{id}", method = RequestMethod.GET)
-    public Callable<Property> getProperty(@PathVariable @Min(1) Long id) {
+    public Callable<Property> getProperty(
+            @Valid @PathVariable @Min(1) Long id) {
         return () -> {
             Property ret = this.repository.findOne(id);
 

@@ -6,7 +6,6 @@ import com.github.tavlima.spotippos.SpotipposApplication;
 import com.github.tavlima.spotippos.domain.MultipleProperties;
 import com.github.tavlima.spotippos.domain.Property;
 import com.github.tavlima.spotippos.repository.PropertyRepository;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -34,10 +33,8 @@ import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
 /**
  * Created by thiago on 8/3/16.
@@ -80,25 +77,24 @@ public class PropertiesSteps {
         this.propertyRepository.save(properties);
     }
 
-    @When("^a GET /properties/'([^']+)' request is received$")
-    public void aGETPropertyIdRequestIsReceived(String id) throws Throwable {
+    @When("^a valid GetProperty request is received for id ([^ ]+)$")
+    public void aValidGetPropertyRequestIsReceivedForId(String id) throws Throwable {
         this.lastResult = doAsyncRequest(get("/properties/" + id).accept(MediaType.APPLICATION_JSON_UTF8));
     }
 
-    @When("^a GET /properties request with the parameters '([^']+)' is received$")
-    public void aGETPropertiesRequestWithTheParametersIsReceived(String parametersJson) throws Throwable {
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder
-                .fromPath("/properties");
+    @When("^an invalid GetProperty request is received for id ([^ ]+)$")
+    public void anInvalidGetPropertyRequestIsReceivedForId(String id) throws Throwable {
+        this.lastResult = doSyncRequest(get("/properties/" + id).accept(MediaType.APPLICATION_JSON_UTF8));
+    }
 
-        Map<String, String> parameters = objectMapper.readValue(parametersJson, new TypeReference<Map<String, String>>(){});
+    @When("^a valid FindPropertiesInRegion request is received with parameters '([^']+)'$")
+    public void aValidFindPropertiesInRegionRequestIsReceivedWithParametersParameters(String parametersJson) throws Throwable {
+        this.lastResult = doAsyncRequest(buildFindInRegionRequest(parametersJson));
+    }
 
-        for (Map.Entry<String, String> e : parameters.entrySet()) {
-            uriBuilder.queryParam(e.getKey(), e.getValue());
-        }
-
-        MockHttpServletRequestBuilder reqBuilder = get(uriBuilder.toUriString()).accept(MediaType.APPLICATION_JSON_UTF8);
-
-        this.lastResult = doAsyncRequest(reqBuilder);
+    @When("^an invalid FindPropertiesInRegion request is received with parameters '([^']+)'$")
+    public void anInvalidFindPropertiesInRegionRequestIsReceivedWithParametersParameters(String parametersJson) throws Throwable {
+        this.lastResult = doSyncRequest(buildFindInRegionRequest(parametersJson));
     }
 
     @Then("^it should return the property '([^']+)'$")
@@ -130,6 +126,23 @@ public class PropertiesSteps {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().string(new SamePropertyIds(expectedIds)))
                 .andReturn();
+    }
+
+    private MockHttpServletRequestBuilder buildFindInRegionRequest(String parametersJson) throws IOException {
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder
+                .fromPath("/properties");
+
+        Map<String, String> parameters = objectMapper.readValue(parametersJson, new TypeReference<Map<String, String>>(){});
+
+        for (Map.Entry<String, String> e : parameters.entrySet()) {
+            uriBuilder.queryParam(e.getKey(), e.getValue());
+        }
+
+        return get(uriBuilder.toUriString()).accept(MediaType.APPLICATION_JSON_UTF8);
+    }
+
+    private ResultActions doSyncRequest(RequestBuilder request) throws Exception {
+        return this.mvc.perform(request);
     }
 
     private ResultActions doAsyncRequest(RequestBuilder request) throws Exception {

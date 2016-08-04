@@ -16,7 +16,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(Cucumber.class)
 @CucumberOptions(
 		strict = true,
-		features = "classpath:feature_files/Properties.feature",
+		features = {
+				"classpath:feature_files/GetProperty.feature",
+				"classpath:feature_files/PropertiesInRegion.feature"
+		},
 		glue = "com.github.tavlima.spotippos.step"
 )
 public class SpotipposApplicationTests {
