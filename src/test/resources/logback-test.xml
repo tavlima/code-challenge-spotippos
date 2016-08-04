@@ -6,7 +6,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework.boot.autoconfigure" level="DEBUG"/>
+    <!-- logger name="org.springframework.boot.autoconfigure" level="DEBUG"/ -->
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

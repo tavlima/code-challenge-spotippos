@@ -1,15 +1,11 @@
 #language:en
-@ignore
 Feature: Property - Create a property
 
-  Background:
+  Scenario Outline: Create a property - OK
     Given that the provinces database has the records:
       | {"id": 1, "name": "ProvinceA", "x0": 0, "y0": 0, "x1": 420, "y1": 300 }     |
       | {"id": 2, "name": "ProvinceB", "x0": 0, "y0": 0, "x1": 140, "y1": 100 }     |
       | {"id": 3, "name": "ProvinceC", "x0": 280, "y0": 200, "x1": 420, "y1": 300 } |
-
-
-  Scenario Outline: Create a property - OK
     When a valid CreateProperty request is received with payload '<payload>'
     Then it should return the new property id <new_id>
     And this new property will belong to provinces '<provinces>'

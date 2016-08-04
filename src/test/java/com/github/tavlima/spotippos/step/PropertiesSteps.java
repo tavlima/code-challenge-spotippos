@@ -7,7 +7,6 @@ import com.github.tavlima.spotippos.domain.MultipleProperties;
 import com.github.tavlima.spotippos.domain.Property;
 import com.github.tavlima.spotippos.repository.PropertyRepository;
 import cucumber.api.PendingException;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -27,7 +26,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.*;
@@ -63,8 +61,8 @@ public class PropertiesSteps {
     private ResultActions lastResult;
 
     @Given("^that the properties database has the records:$")
-    public void thatThePropertiesDatabaseHasTheRecords(List<String> records) throws Throwable {
-        List<Property> properties = records.stream()
+    public void thatThePropertiesDatabaseHasTheRecords(List<String> propertiesJson) throws Throwable {
+        List<Property> properties = propertiesJson.stream()
                 .map(s -> {
                     try {
                         return objectMapper.readValue(s, Property.class);
@@ -80,7 +78,7 @@ public class PropertiesSteps {
     }
 
     @Given("^that the provinces database has the records:$")
-    public void thatTheProvincesDatabaseHasTheRecords() throws Throwable {
+    public void thatTheProvincesDatabaseHasTheRecords(List<String> provincesJson) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }
@@ -96,23 +94,23 @@ public class PropertiesSteps {
     }
 
     @When("^a valid FindPropertiesInRegion request is received with parameters '([^']+)'$")
-    public void aValidFindPropertiesInRegionRequestIsReceivedWithParametersParameters(String parametersJson) throws Throwable {
+    public void aValidFindPropertiesInRegionRequestIsReceivedWithParameters(String parametersJson) throws Throwable {
         this.lastResult = doAsyncRequest(buildFindInRegionRequest(parametersJson));
     }
 
     @When("^an invalid FindPropertiesInRegion request is received with parameters '([^']+)'$")
-    public void anInvalidFindPropertiesInRegionRequestIsReceivedWithParametersParameters(String parametersJson) throws Throwable {
+    public void anInvalidFindPropertiesInRegionRequestIsReceivedWithParameters(String parametersJson) throws Throwable {
         this.lastResult = doSyncRequest(buildFindInRegionRequest(parametersJson));
     }
 
-    @When("^a valid CreateProperty request is received with payload '<payload>'$")
-    public void aValidCreatePropertyRequestIsReceivedWithPayloadPayload() throws Throwable {
+    @When("^a valid CreateProperty request is received with payload '([^']+)'$")
+    public void aValidCreatePropertyRequestIsReceivedWithPayload(String payloadJson) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }
 
-    @When("^an invalid CreateProperty request is received with payload '<payload>'$")
-    public void anInvalidCreatePropertyRequestIsReceivedWithPayloadPayload() throws Throwable {
+    @When("^an invalid CreateProperty request is received with payload '([^']+)'$")
+    public void anInvalidCreatePropertyRequestIsReceivedWithPayload(String payloadJson) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }
@@ -148,14 +146,14 @@ public class PropertiesSteps {
                 .andReturn();
     }
 
-    @Then("^it should return the new property id <new_id>$")
-    public void itShouldReturnTheNewPropertyIdNew_id() throws Throwable {
+    @Then("^it should return the new property id (\\d+)$")
+    public void itShouldReturnTheNewPropertyId(int newPropertyId) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }
 
-    @Then("^this new property will belong to provinces '<provinces>'$")
-    public void thisNewPropertyWillBelongToProvincesProvinces() throws Throwable {
+    @Then("^this new property will belong to provinces '([^']*)'$")
+    public void thisNewPropertyWillBelongToProvinces(String provincesNamesCSV) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }
