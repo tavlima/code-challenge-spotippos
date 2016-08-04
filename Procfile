@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar target/spotippos.jar
+web: java -Dspring.config.location=classpath:/heroku.properties -Dserver.port=$PORT -jar target/spotippos.jar

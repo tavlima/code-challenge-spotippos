@@ -104,6 +104,13 @@
 			<version>9.4-1201-jdbc4</version>
 		</dependency>
 
+		<!-- Markdown -->
+		<dependency>
+			<groupId>org.pegdown</groupId>
+			<artifactId>pegdown</artifactId>
+			<version>1.6.0</version>
+		</dependency>
+
 		<!-- Commons -->
 		<dependency>
 			<groupId>commons-beanutils</groupId>
