@@ -1,6 +1,7 @@
 package com.github.tavlima.spotippos.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,7 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.util.Objects;
+import javax.validation.constraints.NotNull;
+import java.util.*;
 
 /**
  * Created by thiago on 8/3/16.
@@ -22,18 +24,44 @@ public class Property {
     private Long id;
 
     @Min(0)
-    @Max(1200)
+    @Max(1400)
+    @NotNull
     private Integer x;
 
     @Min(0)
     @Max(1000)
+    @NotNull
     private Integer y;
+
+    @NotEmpty
     private String title;
+
+    @Min(0)
+    @NotNull
     private Integer price;
+
+    @NotEmpty
     private String description;
+
+    @Min(1)
+    @Max(5)
+    @NotNull
     private Integer beds;
+
+    @Min(1)
+    @Max(4)
+    @NotNull
     private Integer baths;
+
+    @Min(20)
+    @Max(240)
+    @NotNull
     private Integer squareMeters;
+
+    /**
+     * Mapped as special-charater separated string due
+     * to the low update frequency (expected)
+     */
     private String provinces;
 
     public Property() {
@@ -111,12 +139,14 @@ public class Property {
         this.squareMeters = squareMeters;
     }
 
-    public String getProvinces() {
-        return provinces;
+    public Set<String> getProvinces() {
+        return (provinces == null || provinces.isEmpty()) ?
+                Collections.emptySet() :
+                new TreeSet<>(Arrays.asList(provinces.split(";")));
     }
 
-    public void setProvinces(String provinces) {
-        this.provinces = provinces;
+    public void setProvinces(TreeSet<String> provinces) {
+        this.provinces = String.join(";", provinces);
     }
 
     @Override

@@ -97,6 +97,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Commons -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+		</dependency>
+
 		<!-- Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
