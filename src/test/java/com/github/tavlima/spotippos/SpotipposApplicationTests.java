@@ -18,7 +18,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 		strict = true,
 		features = {
 				"classpath:feature_files/GetProperty.feature",
-				"classpath:feature_files/PropertiesInRegion.feature"
+				"classpath:feature_files/PropertiesInRegion.feature",
+				"classpath:feature_files/CreateProperty.feature"
 		},
 		glue = "com.github.tavlima.spotippos.step"
 )

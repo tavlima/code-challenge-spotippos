@@ -19,6 +19,7 @@ import java.util.concurrent.Callable;
  */
 @RestController
 @Validated
+@RequestMapping(value = "/properties")
 public class PropertyController {
 
     private final PropertyRepository repository;
@@ -28,13 +29,13 @@ public class PropertyController {
         this.repository = repository;
     }
 
-    @RequestMapping(value = "/properties", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public Callable<Long> createProperty(
             @RequestBody Property property) {
         return () -> -1L;
     }
 
-    @RequestMapping(value = "/properties", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public Callable<MultipleProperties> getPropertyByArea(
             @RequestParam @Min(0) @Max(1200) Integer ax,
             @RequestParam @Min(0) @Max(1000) Integer ay,
@@ -47,7 +48,7 @@ public class PropertyController {
         };
     }
 
-    @RequestMapping(value = "/properties/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Callable<Property> getProperty(
             @Valid @PathVariable @Min(1) Long id) {
         return () -> {

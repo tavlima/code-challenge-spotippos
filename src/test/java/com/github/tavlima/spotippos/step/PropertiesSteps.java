@@ -6,6 +6,8 @@ import com.github.tavlima.spotippos.SpotipposApplication;
 import com.github.tavlima.spotippos.domain.MultipleProperties;
 import com.github.tavlima.spotippos.domain.Property;
 import com.github.tavlima.spotippos.repository.PropertyRepository;
+import cucumber.api.PendingException;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -77,6 +79,12 @@ public class PropertiesSteps {
         this.propertyRepository.save(properties);
     }
 
+    @Given("^that the provinces database has the records:$")
+    public void thatTheProvincesDatabaseHasTheRecords() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
     @When("^a valid GetProperty request is received for id ([^ ]+)$")
     public void aValidGetPropertyRequestIsReceivedForId(String id) throws Throwable {
         this.lastResult = doAsyncRequest(get("/properties/" + id).accept(MediaType.APPLICATION_JSON_UTF8));
@@ -97,19 +105,31 @@ public class PropertiesSteps {
         this.lastResult = doSyncRequest(buildFindInRegionRequest(parametersJson));
     }
 
-    @Then("^it should return the property '([^']+)'$")
-    public void itShouldReturnTheProperty(String propertyJson) throws Throwable {
-        this.lastResult
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(propertyJson))
-                .andReturn();
+    @When("^a valid CreateProperty request is received with payload '<payload>'$")
+    public void aValidCreatePropertyRequestIsReceivedWithPayloadPayload() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @When("^an invalid CreateProperty request is received with payload '<payload>'$")
+    public void anInvalidCreatePropertyRequestIsReceivedWithPayloadPayload() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
     }
 
     @Then("^it should return a (\\d+) status error$")
     public void itShouldReturnAStatusError(int status) throws Throwable {
         this.lastResult
                 .andExpect(status().is(status))
+                .andReturn();
+    }
+
+    @Then("^it should return the property '([^']+)'$")
+    public void itShouldReturnTheProperty(String propertyJson) throws Throwable {
+        this.lastResult
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(propertyJson))
                 .andReturn();
     }
 
@@ -128,17 +148,28 @@ public class PropertiesSteps {
                 .andReturn();
     }
 
+    @Then("^it should return the new property id <new_id>$")
+    public void itShouldReturnTheNewPropertyIdNew_id() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @Then("^this new property will belong to provinces '<provinces>'$")
+    public void thisNewPropertyWillBelongToProvincesProvinces() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
     private MockHttpServletRequestBuilder buildFindInRegionRequest(String parametersJson) throws IOException {
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder
-                .fromPath("/properties");
+        MockHttpServletRequestBuilder builder = get("/properties").accept(MediaType.APPLICATION_JSON_UTF8);
 
         Map<String, String> parameters = objectMapper.readValue(parametersJson, new TypeReference<Map<String, String>>(){});
 
         for (Map.Entry<String, String> e : parameters.entrySet()) {
-            uriBuilder.queryParam(e.getKey(), e.getValue());
+            builder.param(e.getKey(), e.getValue());
         }
 
-        return get(uriBuilder.toUriString()).accept(MediaType.APPLICATION_JSON_UTF8);
+        return builder;
     }
 
     private ResultActions doSyncRequest(RequestBuilder request) throws Exception {
