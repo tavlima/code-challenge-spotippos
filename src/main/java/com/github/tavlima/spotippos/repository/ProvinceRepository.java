@@ -16,7 +16,7 @@ import java.util.Set;
 @RepositoryDefinition(domainClass = Province.class, idClass = Long.class)
 public interface ProvinceRepository extends JpaRepository<Province, Long> {
 
-    @Query("SELECT p FROM Province p WHERE ((p.x0 <= :x AND :x <= p.x1) AND (p.y0 <= :y AND :y <= p.y1))")
+    @Query("SELECT p FROM Province p WHERE ((p.x0 <= :x AND :x <= p.x1) AND (p.y0 <= :y AND :y <= p.y1))\n")
     Set<Province> findByCoord(@Param("x") int x, @Param("y") int y);
 
 }

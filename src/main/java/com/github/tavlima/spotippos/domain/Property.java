@@ -15,8 +15,8 @@ import java.util.*;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(indexes = {
-        @Index(name = "idx_property_x", columnList = "x"),
-        @Index(name = "idx_property_y", columnList = "y")
+    @Index(name = "idx_property_x", columnList = "x"),
+    @Index(name = "idx_property_y", columnList = "y")
 })
 public class Property {
 
