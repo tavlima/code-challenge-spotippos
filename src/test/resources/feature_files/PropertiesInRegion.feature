@@ -1,5 +1,4 @@
 #language:en
-
 Feature: Property - Find properties in region
 
   Scenario Outline: Find properties in region - OK

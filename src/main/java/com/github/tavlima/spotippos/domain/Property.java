@@ -67,6 +67,18 @@ public class Property {
     public Property() {
     }
 
+    public Property(Integer x, Integer y, String title, Integer price, String description, Integer beds, Integer baths, Integer squareMeters, String provinces) {
+        this.x = x;
+        this.y = y;
+        this.title = title;
+        this.price = price;
+        this.description = description;
+        this.beds = beds;
+        this.baths = baths;
+        this.squareMeters = squareMeters;
+        this.provinces = provinces;
+    }
+
     public Long getId() {
         return id;
     }

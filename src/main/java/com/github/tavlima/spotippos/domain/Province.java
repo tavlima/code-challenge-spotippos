@@ -12,6 +12,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.Objects;
 
 /**
  * Created by thiago on 8/3/16.
@@ -101,6 +102,24 @@ public class Province {
 
     public void setY1(Integer y1) {
         this.y1 = y1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Province province = (Province) o;
+        return Objects.equals(id, province.id) &&
+                Objects.equals(name, province.name) &&
+                Objects.equals(x0, province.x0) &&
+                Objects.equals(y0, province.y0) &&
+                Objects.equals(x1, province.x1) &&
+                Objects.equals(y1, province.y1);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, x0, y0, x1, y1);
     }
 
 }

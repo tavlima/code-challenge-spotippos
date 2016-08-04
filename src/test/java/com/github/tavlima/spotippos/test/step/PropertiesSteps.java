@@ -1,4 +1,4 @@
-package com.github.tavlima.spotippos.step;
+package com.github.tavlima.spotippos.test.step;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,13 +7,12 @@ import com.github.tavlima.spotippos.domain.Property;
 import com.github.tavlima.spotippos.domain.Province;
 import com.github.tavlima.spotippos.repository.PropertyRepository;
 import com.github.tavlima.spotippos.repository.ProvinceRepository;
-import com.github.tavlima.spotippos.step.matcher.SamePropertyId;
-import com.github.tavlima.spotippos.step.matcher.SamePropertyIds;
-import cucumber.api.PendingException;
+import com.github.tavlima.spotippos.test.matcher.SamePropertyId;
+import com.github.tavlima.spotippos.test.matcher.SamePropertyIds;
+import com.github.tavlima.spotippos.test.matcher.SameProvinces;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import org.assertj.core.api.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,18 +177,10 @@ public class PropertiesSteps {
             expectedProvinces = new TreeSet<>(Arrays.asList(provincesNamesCSV.split(",")));
         }
 
-        MvcResult result = this.lastResult
+        this.lastResult
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andReturn();
-
-        // .andExpect(content().string(samePropertyId(newPropertyId)));
-
-        Object asyncResult = result.getAsyncResult();
-
-        Assertions.assertThat(asyncResult)
-                .isInstanceOf(Property.class)
-                .hasFieldOrPropertyWithValue("provinces", expectedProvinces);
+                .andExpect(content().string(sameProvinces(expectedProvinces)));
     }
 
     private MockHttpServletRequestBuilder buildFindInRegionRequest(String parametersJson) throws IOException {
@@ -228,6 +219,10 @@ public class PropertiesSteps {
 
     private SamePropertyId samePropertyId(long expectedId) {
         return new SamePropertyId(this.objectMapper, expectedId);
+    }
+
+    private SameProvinces sameProvinces(Set<String> expectedProvinces) {
+        return new SameProvinces(this.objectMapper, expectedProvinces);
     }
 
 }

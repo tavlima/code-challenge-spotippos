@@ -21,7 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 				"classpath:feature_files/PropertiesInRegion.feature",
 				"classpath:feature_files/CreateProperty.feature"
 		},
-		glue = "com.github.tavlima.spotippos.step"
+		glue = "com.github.tavlima.spotippos.test.step"
 )
 public class SpotipposApplicationTests {
 

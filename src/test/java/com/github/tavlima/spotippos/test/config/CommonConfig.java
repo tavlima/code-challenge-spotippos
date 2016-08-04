@@ -1,4 +1,4 @@
-package com.github.tavlima.spotippos.config;
+package com.github.tavlima.spotippos.test.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
