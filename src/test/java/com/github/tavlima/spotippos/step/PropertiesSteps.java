@@ -1,13 +1,16 @@
 package com.github.tavlima.spotippos.step;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tavlima.spotippos.SpotipposApplication;
+import com.github.tavlima.spotippos.domain.MultipleProperties;
 import com.github.tavlima.spotippos.domain.Property;
 import com.github.tavlima.spotippos.repository.PropertyRepository;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import org.hamcrest.Matchers;
+import org.hamcrest.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +26,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
@@ -76,9 +80,25 @@ public class PropertiesSteps {
         this.propertyRepository.save(properties);
     }
 
-    @When("^a GET /property/'([^']+)' request is received$")
+    @When("^a GET /properties/'([^']+)' request is received$")
     public void aGETPropertyIdRequestIsReceived(String id) throws Throwable {
         this.lastResult = doAsyncRequest(get("/properties/" + id).accept(MediaType.APPLICATION_JSON_UTF8));
+    }
+
+    @When("^a GET /properties request with the parameters '([^']+)' is received$")
+    public void aGETPropertiesRequestWithTheParametersIsReceived(String parametersJson) throws Throwable {
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder
+                .fromPath("/properties");
+
+        Map<String, String> parameters = objectMapper.readValue(parametersJson, new TypeReference<Map<String, String>>(){});
+
+        for (Map.Entry<String, String> e : parameters.entrySet()) {
+            uriBuilder.queryParam(e.getKey(), e.getValue());
+        }
+
+        MockHttpServletRequestBuilder reqBuilder = get(uriBuilder.toUriString()).accept(MediaType.APPLICATION_JSON_UTF8);
+
+        this.lastResult = doAsyncRequest(reqBuilder);
     }
 
     @Then("^it should return the property '([^']+)'$")
@@ -91,9 +111,24 @@ public class PropertiesSteps {
     }
 
     @Then("^it should return a (\\d+) status error$")
-    public void itShouldReturnA404StatusError(int status) throws Throwable {
+    public void itShouldReturnAStatusError(int status) throws Throwable {
         this.lastResult
                 .andExpect(status().is(status))
+                .andReturn();
+    }
+
+    @Then("^it should return the properties with id '([^']*)'$")
+    public void itShouldReturnThePropertiesWithId(String propertyIdsCSV) throws Throwable {
+        Set<Long> expectedIds = Collections.emptySet();
+
+        if (! propertyIdsCSV.isEmpty()) {
+            expectedIds = Arrays.asList(propertyIdsCSV.split(",")).stream().map(Long::valueOf).collect(Collectors.toSet());
+        }
+
+        this.lastResult
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(new SamePropertyIds(expectedIds)))
                 .andReturn();
     }
 
@@ -102,5 +137,34 @@ public class PropertiesSteps {
                 .andReturn();
 
         return this.mvc.perform(asyncDispatch(mvcResult));
+    }
+
+    private class SamePropertyIds extends TypeSafeMatcher<String> {
+        private final Set<Long> expectedIds;
+
+        public SamePropertyIds(Set<Long> expectedIds) {
+            this.expectedIds = expectedIds;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText(expectedIds.toString());
+        }
+
+        @Override
+        protected boolean matchesSafely(String item) {
+            try {
+                MultipleProperties response = objectMapper.readValue(item, MultipleProperties.class);
+
+                Set<Long> foundPropertyIds = response.getProperties().stream()
+                        .map(Property::getId)
+                        .collect(Collectors.toSet());
+
+                return foundPropertyIds.equals(expectedIds) ;
+
+            } catch (IOException e) {
+                return false;
+            }
+        }
     }
 }

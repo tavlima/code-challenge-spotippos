@@ -13,6 +13,11 @@ public class MultipleProperties {
     public MultipleProperties() {
     }
 
+    public MultipleProperties(Integer foundProperties, List<Property> properties) {
+        this.foundProperties = foundProperties;
+        this.properties = properties;
+    }
+
     public Integer getFoundProperties() {
         return foundProperties;
     }
