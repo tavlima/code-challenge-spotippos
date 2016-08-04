@@ -3,10 +3,7 @@ package com.github.tavlima.spotippos.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -17,6 +14,10 @@ import java.util.*;
  */
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Table(indexes = {
+        @Index(name = "idx_property_x", columnList = "x"),
+        @Index(name = "idx_property_y", columnList = "y")
+})
 public class Property {
 
     @Id
