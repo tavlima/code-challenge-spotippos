@@ -1,12 +1,18 @@
 package com.github.tavlima.spotippos.controller;
 
 import com.github.tavlima.spotippos.domain.*;
+import com.github.tavlima.spotippos.domain.request.CreatePropertyPayload;
+import com.github.tavlima.spotippos.domain.request.FindByRegionPayload;
 import com.github.tavlima.spotippos.repository.PropertyRepository;
 import com.github.tavlima.spotippos.repository.ProvinceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.MethodParameter;
+import org.springframework.validation.DirectFieldBindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.concurrent.Callable;
@@ -30,35 +36,39 @@ public class PropertyController {
 
     @RequestMapping(method = RequestMethod.POST)
     public Callable<Property> createProperty(@RequestBody @Valid CreatePropertyPayload payload) {
-        System.out.println("teste");
-
         return () -> {
+            Property ret = null;
+
             TreeSet<String> provincesNames = provinceRepository.findByCoord(payload.getX(), payload.getY()).stream()
                     .map(Province::getName)
                     .collect(Collectors.toCollection(TreeSet::new));
 
-            Property newProperty = new PropertyBuilder()
+            ret = new PropertyBuilder()
                     .from(payload)
                     .provinces(provincesNames)
                     .build();
 
-            propertyRepository.save(newProperty);
+            propertyRepository.save(ret);
 
-            return newProperty;
+            return ret;
         };
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Callable<MultipleProperties> getPropertyByArea(@RequestParam Integer ax, @RequestParam Integer ay, @RequestParam Integer bx, @RequestParam Integer by) {
+    public Callable<MultipleProperties> getPropertyByArea(@Valid FindByRegionPayload payload) {
         return () -> {
-            List<Property> properties = this.propertyRepository.findAllInRegion(ax, ay, bx, by);
+            List<Property> properties = this.propertyRepository.findAllInRegion(payload.getAx(), payload.getAy(), payload.getBx(), payload.getBy());
 
             return new MultipleProperties(properties.size(), properties);
         };
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Callable<Property> getProperty(@PathVariable Long id) {
+    public Callable<Property> getProperty(@PathVariable Long id) throws MethodArgumentNotValidException {
+        if (id < 1) {
+            throw new GenericBadRequestException();
+        }
+
         return () -> {
             Property ret = this.propertyRepository.findOne(id);
 

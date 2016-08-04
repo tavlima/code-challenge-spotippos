@@ -1,5 +1,7 @@
 package com.github.tavlima.spotippos.domain;
 
+import com.github.tavlima.spotippos.domain.request.CreatePropertyPayload;
+
 import java.util.TreeSet;
 
 public class PropertyBuilder {

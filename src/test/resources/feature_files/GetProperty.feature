@@ -27,9 +27,6 @@ Feature: Property - Get property by id
       | id |
       | 6  |
       | 10 |
-      # Should be returning 400
-      | 0  |
-      | -1 |
 
 
   Scenario Outline: Get a property by id - BAD REQUEST
@@ -39,6 +36,5 @@ Feature: Property - Get property by id
       | id  |
       | a   |
       | abc |
-      # validation not working (yet)
-      # | 0   |
-      # | -1  |
+      | 0   |
+      | -1  |

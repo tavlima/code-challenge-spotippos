@@ -16,18 +16,6 @@ Feature: Property - Find properties in region
       | {"ax": 0,   "ay": 0,   "bx": 40,   "by": 40}   | 1,2,3,4      |
       | {"ax": 25,  "ay": 25,  "bx": 50,   "by": 50}   | 3,4,5        |
       | {"ax": 900, "ay": 900, "bx": 1000, "by": 1000} |              |
-      # Should be returning 400 ---
-      # Negative coords
-      | {"ax": -1,  "ay": 10,  "bx": 10,   "by": 10}   | 1            |
-      | {"ax": 10,  "ay": -1,  "bx": 10,   "by": 10}   | 1            |
-      # ax > bx OR ay > by
-      | {"ax": 10,  "ay": 10,  "bx": -1,   "by": 10}   |              |
-      | {"ax": 10,  "ay": 10,  "bx": 10,   "by": -1}   |              |
-      | {"ax": 100, "ay": 0,   "bx": 0,    "by": 0}    |              |
-      | {"ax": 0,   "ay": 100, "bx": 0,    "by": 0}    |              |
-      # Coords beyond world boundaries
-      | {"ax": 0,   "ay": 0,   "bx": 1300, "by": 100}  | 1,2,3,4,5    |
-      | {"ax": 0,   "ay": 0,   "bx": 100,  "by": 1100} | 1,2,3,4,5    |
 
 
   Scenario Outline: Find properties in region - BAD REQUEST
@@ -35,12 +23,23 @@ Feature: Property - Find properties in region
     Then it should return a 400 status error
     Examples:
       | parameters                                       |
+      # Missing required parameters
       | {}                                               |
       | {            "ay": 0,    "bx": 20,   "by": 20}   |
       | {"ax": 0,                "bx": 20,   "by": 20}   |
       | {"ax": 0,    "ay": 0,                "by": 20}   |
       | {"ax": 0,    "ay": 0,    "bx": 20            }   |
+      # Invalid values (type)
       | {"ax": "ax", "ay": 0,    "bx": 20,   "by": 20}   |
       | {"ax": 0,    "ay": "ay", "bx": 20,   "by": 20}   |
       | {"ax": 0,    "ay": 0,    "bx": "bx", "by": 20}   |
       | {"ax": 0,    "ay": 0,    "bx": 20,   "by": "by"} |
+      # Constraints - Negative coords
+      | {"ax": -1,   "ay": 10,   "bx": 10,   "by": 10}     |
+      | {"ax": 10,   "ay": -1,   "bx": 10,   "by": 10}     |
+      # Constraints - ax > bx OR ay > by
+      | {"ax": 10,   "ay": 10,   "bx": 0,    "by": 10}     |
+      | {"ax": 10,   "ay": 10,   "bx": 10,   "by": 0}      |
+      # Constraints - Coords beyond world boundaries
+      | {"ax": 0,    "ay": 0,    "bx": 1401, "by": 100}    |
+      | {"ax": 0,    "ay": 0,    "bx": 100,  "by": 1001}   |

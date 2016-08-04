@@ -102,32 +102,32 @@ public class PropertiesSteps {
 
     @When("^a valid GetProperty request is received for id ([^ ]+)$")
     public void aValidGetPropertyRequestIsReceivedForId(String id) throws Throwable {
-        this.lastResult = doAsyncRequest(get("/properties/" + id).accept(MediaType.APPLICATION_JSON_UTF8));
+        this.lastResult = doRequest(get("/properties/" + id).accept(MediaType.APPLICATION_JSON_UTF8));
     }
 
     @When("^an invalid GetProperty request is received for id ([^ ]+)$")
     public void anInvalidGetPropertyRequestIsReceivedForId(String id) throws Throwable {
-        this.lastResult = doSyncRequest(get("/properties/" + id).accept(MediaType.APPLICATION_JSON_UTF8));
+        this.lastResult = doRequest(get("/properties/" + id).accept(MediaType.APPLICATION_JSON_UTF8));
     }
 
     @When("^a valid FindPropertiesInRegion request is received with parameters '([^']+)'$")
     public void aValidFindPropertiesInRegionRequestIsReceivedWithParameters(String parametersJson) throws Throwable {
-        this.lastResult = doAsyncRequest(buildFindInRegionRequest(parametersJson));
+        this.lastResult = doRequest(buildFindInRegionRequest(parametersJson));
     }
 
     @When("^an invalid FindPropertiesInRegion request is received with parameters '([^']+)'$")
     public void anInvalidFindPropertiesInRegionRequestIsReceivedWithParameters(String parametersJson) throws Throwable {
-        this.lastResult = doSyncRequest(buildFindInRegionRequest(parametersJson));
+        this.lastResult = doRequest(buildFindInRegionRequest(parametersJson));
     }
 
     @When("^a valid CreateProperty request is received with payload '([^']+)'$")
     public void aValidCreatePropertyRequestIsReceivedWithPayload(String payloadJson) throws Throwable {
-        this.lastResult = doAsyncRequest(buildCreateProperty(payloadJson));
+        this.lastResult = doRequest(buildCreateProperty(payloadJson));
     }
 
     @When("^an invalid CreateProperty request is received with payload '([^']+)'$")
     public void anInvalidCreatePropertyRequestIsReceivedWithPayload(String payloadJson) throws Throwable {
-        this.lastResult = doSyncRequest(buildCreateProperty(payloadJson));
+        this.lastResult = doRequest(buildCreateProperty(payloadJson));
     }
 
     @Then("^it should return a (\\d+) status error$")
@@ -202,15 +202,22 @@ public class PropertiesSteps {
                 .content(payloadJson);
     }
 
-    private ResultActions doSyncRequest(RequestBuilder request) throws Exception {
-        return this.mvc.perform(request);
-    }
+    private ResultActions doRequest(RequestBuilder request) throws Exception {
+        ResultActions ret;
 
-    private ResultActions doAsyncRequest(RequestBuilder request) throws Exception {
-        MvcResult mvcResult = this.mvc.perform(request)
-                .andReturn();
+        try {
+            MvcResult mvcResult = this.mvc.perform(request)
+                    .andReturn();
 
-        return this.mvc.perform(asyncDispatch(mvcResult));
+            mvcResult.getAsyncResult();
+
+            ret = this.mvc.perform(asyncDispatch(mvcResult));
+
+        } catch (IllegalStateException e) {
+            ret = this.mvc.perform(request);
+        }
+
+        return ret;
     }
 
     private SamePropertyIds samePropertyIds(Set<Long> expectedIds) {
