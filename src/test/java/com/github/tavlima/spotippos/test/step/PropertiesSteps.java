@@ -7,6 +7,7 @@ import com.github.tavlima.spotippos.domain.Property;
 import com.github.tavlima.spotippos.domain.Province;
 import com.github.tavlima.spotippos.repository.PropertyRepository;
 import com.github.tavlima.spotippos.repository.ProvinceRepository;
+import com.github.tavlima.spotippos.repository.SkipFromTestContextTypeExcludeFilter;
 import com.github.tavlima.spotippos.test.matcher.SamePropertyId;
 import com.github.tavlima.spotippos.test.matcher.SamePropertyIds;
 import com.github.tavlima.spotippos.test.matcher.SameProvinces;
@@ -16,6 +17,7 @@ import cucumber.api.java.en.When;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.filter.TypeExcludeFilters;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -47,6 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureDataJpa
 @AutoConfigureTestDatabase
 @ContextConfiguration(classes = SpotipposApplication.class)
+@TypeExcludeFilters(SkipFromTestContextTypeExcludeFilter.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class PropertiesSteps {
 
