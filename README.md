@@ -31,6 +31,10 @@ O tipo de erro, nesta implementação, é representado principalmente pelo _HTTP
 * `404 NOT FOUND`: Retornado quando não é encontrado um imóvel com o `id` solicitado
 * `400 BAD REQUEST`: Retornado quando os parâmetros da requisição são inválidos, segundo qualquer uma das regras de validação.
 
+### Índices do banco de dados
+
+Dado que a _query_ mais complexa (e provavelmente mais frequentemente executada) desta API é a busca de imóveis por área, ambas as colunas de coordenadas (`x` e `y`) da tabela de `Property` foram indexadas, para melhorar o desempenho das buscas.
+
 ### Validações adicionais
 
 Algumas regras foram inferidas da especificação, enquanto outras foram introduzidas, principalmente pela ausência de maiores detalhes na especificação do desafio.
