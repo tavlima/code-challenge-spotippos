@@ -31,6 +31,10 @@ O tipo de erro, nesta implementação, é representado principalmente pelo _HTTP
 * `404 NOT FOUND`: Retornado quando não é encontrado um imóvel com o `id` solicitado
 * `400 BAD REQUEST`: Retornado quando os parâmetros da requisição são inválidos, segundo qualquer uma das regras de validação.
 
+### Índices do banco de dados
+
+Dado que a _query_ mais complexa (e provavelmente mais frequentemente executada) desta API é a busca de imóveis por área, ambas as colunas de coordenadas (`x` e `y`) da tabela de `Property` foram indexadas, para melhorar o desempenho das buscas.
+
 ### Validações adicionais
 
 Algumas regras foram inferidas da especificação, enquanto outras foram introduzidas, principalmente pela ausência de maiores detalhes na especificação do desafio.
@@ -38,6 +42,10 @@ Algumas regras foram inferidas da especificação, enquanto outras foram introdu
 * Na busca por imóvel específico, `:id > 0`
 * Na busca por área, foi aplicada a restrição: `ax <= bx && ay <= by`
 * Apesar da API não prever end-points para a criação de _Provinces_, foi aplicada a seguinte restrição sobre o valor dos seus atributos: `x0 <= x1 && y0 <= y1`
+
+### _Fixtures_
+
+A aplicação inicializa o banco de dados (DDL e dados de exemplo) caso detecte que as tabelas não existem ou estão vazias. Os dados iniciais foram extraídos dos JSONs de [provincias](https://github.com/VivaReal/code-challenge/blob/master/provinces.json) e de [imóveis](https://github.com/VivaReal/code-challenge/blob/master/properties.json).
 
 ### Testes
 
