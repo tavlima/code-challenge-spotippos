@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * Created by thiago on 8/3/16.
  */
 @RestController
-@RequestMapping(value = "/properties")
+@RequestMapping(value = "/v1/properties")
 public class PropertyController {
 
     private final PropertyRepository propertyRepository;

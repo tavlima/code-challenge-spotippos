@@ -102,12 +102,12 @@ public class PropertiesSteps {
 
     @When("^a valid GetProperty request is received for id ([^ ]+)$")
     public void aValidGetPropertyRequestIsReceivedForId(String id) throws Throwable {
-        this.lastResult = doRequest(get("/properties/" + id).accept(MediaType.APPLICATION_JSON_UTF8));
+        this.lastResult = doRequest(buildGetPropertyRequest(id));
     }
 
     @When("^an invalid GetProperty request is received for id ([^ ]+)$")
     public void anInvalidGetPropertyRequestIsReceivedForId(String id) throws Throwable {
-        this.lastResult = doRequest(get("/properties/" + id).accept(MediaType.APPLICATION_JSON_UTF8));
+        this.lastResult = doRequest(buildGetPropertyRequest(id));
     }
 
     @When("^a valid FindPropertiesInRegion request is received with parameters '([^']+)'$")
@@ -184,7 +184,8 @@ public class PropertiesSteps {
     }
 
     private MockHttpServletRequestBuilder buildFindInRegionRequest(String parametersJson) throws IOException {
-        MockHttpServletRequestBuilder builder = get("/properties").accept(MediaType.APPLICATION_JSON_UTF8);
+        MockHttpServletRequestBuilder builder = get("/v1/properties")
+                .accept(MediaType.APPLICATION_JSON_UTF8);
 
         Map<String, String> parameters = objectMapper.readValue(parametersJson, new TypeReference<Map<String, String>>(){});
 
@@ -195,8 +196,13 @@ public class PropertiesSteps {
         return builder;
     }
 
+    private MockHttpServletRequestBuilder buildGetPropertyRequest(String id) {
+        return get("/v1/properties/" + id)
+                .accept(MediaType.APPLICATION_JSON_UTF8);
+    }
+
     private MockHttpServletRequestBuilder buildCreateProperty(String payloadJson) {
-        return post("/properties")
+        return post("/v1/properties")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(payloadJson);
