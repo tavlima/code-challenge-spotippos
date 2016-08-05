@@ -1,4 +1,4 @@
-# Spotippos Code Challenge
+# Spotippos Code Challenge [![Build Status](https://travis-ci.org/tavlima/code-challenge-spotippos.svg?branch=master)](https://travis-ci.org/tavlima/code-challenge-spotippos)
 
 Implementação do desafio [VivaReal Code Challenge](https://github.com/VivaReal/code-challenge)
 
