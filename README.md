@@ -6,6 +6,10 @@ Implementação do desafio [VivaReal Code Challenge](https://github.com/VivaReal
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
+## Execução local
+
+Para executar localmente a aplicação, basta clonar o repositório e executar, na raíz do projeto: `mvn spring-boot:run`
+
 ## API
 
 A API foi implementada de acordo com a especificação do [desafio de back-end](https://github.com/VivaReal/code-challenge/blob/master/backend.md). Como solução simples para uma futura necessidade de versionamento foi decidido adicionar o prefixo `/v1` em todos os end-points. Desta forma, as operações suportadas respondem nos seguintes end-points:
@@ -45,6 +49,8 @@ Os testes podem (e devem) ser separados de forma que apenas alguns cenários esp
 
 ## Tecnologias
 
+* Java 8
+* Maven
 * Spring Boot
 * Spring MVC
 * Spring Data + JPA
