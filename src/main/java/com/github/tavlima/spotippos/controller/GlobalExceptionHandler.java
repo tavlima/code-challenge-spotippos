@@ -1,5 +1,7 @@
 package com.github.tavlima.spotippos.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,6 +22,9 @@ import java.util.stream.Collectors;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map handle(MethodArgumentNotValidException exception) {
@@ -52,6 +57,8 @@ public class GlobalExceptionHandler {
     }
 
     private Map error(Object message) {
+        logger.debug(message.toString());
+
         return Collections.singletonMap("error", message);
     }
 }
