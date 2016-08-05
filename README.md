@@ -43,6 +43,10 @@ Algumas regras foram inferidas da especificação, enquanto outras foram introdu
 * Na busca por área, foi aplicada a restrição: `ax <= bx && ay <= by`
 * Apesar da API não prever end-points para a criação de _Provinces_, foi aplicada a seguinte restrição sobre o valor dos seus atributos: `x0 <= x1 && y0 <= y1`
 
+### _Fixtures_
+
+A aplicação inicializa o banco de dados (DDL e dados de exemplo) caso detecte que as tabelas não existem ou estão vazias. Os dados iniciais foram extraídos dos JSONs de [provincias](https://github.com/VivaReal/code-challenge/blob/master/provinces.json) e de [imóveis](https://github.com/VivaReal/code-challenge/blob/master/properties.json).
+
 ### Testes
 
 Todos os testes foram implementados como caixa-preta, tendo como entrada as requisições aos end-points dos controllers e validando as respostas. Por simplicidade, não foi feita a validação explícita dos dados salvos no banco de dados (no caso da operação de criação de imóveis), verificada, indiretamente, através do `id` atribuído ao novo imóvel.
